@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ReElite</title>
+
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap" rel="stylesheet">
+    
+    <!-- PWA MANIFEST -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Redirect Elite","short_name":"Elite","start_url":".","display":"standalone","background_color":"#0A0A0A","theme_color":"#FF4242","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/1828/1828466.png","sizes":"512x512","type":"image/png"}]}'>
+
+    <style>
+        :root {
+            --primary: #D9008D;
+            --bg-black: #0A0A0A;
+            --surface: #171719;
+            --border: #2C2C2C;
+            --text-muted: #B0B0B0;
+            --font-satoshi: 'Satoshi', sans-serif;
+        }
+
+        /* --- GLOBAL ANIMATIONS --- */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            70% { transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(217, 0, 141, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(217, 0, 141, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(217, 0, 141, 0.2); }
+        }
+        @keyframes rgb-shift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-black);
+            color: #fff;
+            font-family: var(--font-satoshi);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100dvh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* --- RGB LOADING BAR --- */
+        #progress-bar-container { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 10000; 
+            background: rgba(255,255,255,0.03); 
+        }
+        #progress-bar { 
+            width: 0%; height: 100%; 
+            background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            background-size: 400% 100%;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: rgb-shift 2s linear infinite;
+        }
+
+        .app-wrapper { 
+            width: 100%; max-width: 420px; padding: 20px; 
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .main-card {
+            background-color: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 2rem;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 800; margin: 0; text-align: center; }
+        .subtitle { color: var(--text-muted); font-size: 0.8rem; text-align: center; margin-top: -18px; display: block; }
+
+        .input-box {
+            width: 100%;
+            background: #0d0d0f;
+            border: 1.5px solid var(--border);
+            border-radius: 1rem;
+            padding: 14px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: text;
+        }
+        .input-box:focus { 
+            border-color: var(--primary); 
+            animation: glow 2s infinite ease-in-out;
+            transform: translateY(-2px);
+        }
+
+        .go-btn {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 1rem;
+            padding: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .go-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .go-btn:active { transform: scale(0.96); }
+
+        /* Shortcut Grid */
+        .grid-container { border-top: 1px solid var(--border); padding-top: 20px; }
+        .grid-label { font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: block; }
+        
+        .shortcut-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; position: relative; }
+
+        .shortcut-item {
+            background: #1e1e21;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 12px 4px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            touch-action: none;
+            animation: popIn 0.5s both;
+        }
+        .shortcut-item:hover { border-color: var(--primary); background: #23091A; transform: translateY(-4px); }
+        .shortcut-item:active { transform: scale(0.9); }
+        .shortcut-item.dragging { opacity: 0.5; z-index: 10; transform: scale(1.1); }
+        .shortcut-item img { width: 28px; height: 28px; border-radius: 6px; pointer-events: none; transition: 0.3s; }
+        .shortcut-item:hover img { transform: rotate(5deg) scale(1.1); }
+        .shortcut-item .plus-icon { font-size: 24px; color: var(--primary); pointer-events: none; }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center;
+            z-index: 100; backdrop-filter: blur(8px);
+            transition: 0.3s;
+        }
+        .modal-content {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 2rem;
+            padding: 30px;
+            width: 90%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .action-btn {
+            width: 100%; padding: 14px; border-radius: 1rem; border: 1px solid var(--border);
+            background: #1e1e21; color: white; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.2s;
+        }
+        .action-btn:active { background: #2c2c2f; transform: scale(0.98); }
+        .delete-text { color: #FF4242; }
+        svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Icon Preview in Modal */
+        #iconPreview { width: 40px; height: 40px; border-radius: 8px; align-self: center; margin-bottom: -5px; background: #000; border: 1px solid var(--border); }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="progress-bar-container"><div id="progress-bar"></div></div>
+
+<div class="app-wrapper">
+    <div class="main-card">
+        <h1>ReElite</h1>
+        <span class="subtitle">Personal Workspace</span>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <input type="text" id="mainInput" class="input-box" placeholder="Enter URL or Search" spellcheck="false">
+            <button class="go-btn" onclick="handleLaunch()">Open Link</button>
+        </div>
+
+        <div class="grid-container">
+            <span class="grid-label">Quick Shortcuts</span>
+            <div class="shortcut-grid" id="shortcutGrid">
+                <div class="shortcut-item" id="addBtn" onclick="openAddModal()" style="animation-delay: 0.4s">
+                    <span class="plus-icon">+</span>
+                    <span style="font-weight:600">Add</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="modalTitle" style="margin:0; font-size:1.2rem; text-align: center;">Shortcut</h2>
+        <img id="iconPreview" src="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1242/1242392.png'">
+        <input type="text" id="nodeName" class="input-box" placeholder="Name">
+        <input type="text" id="nodeUrl" class="input-box" placeholder="Site URL (e.g. google.com)">
+        <input type="text" id="nodeIcon" class="input-box" style="font-size: 0.7rem; color: var(--text-muted);" placeholder="Icon URL (Auto-generated)">
+        
+        <div style="display:flex; gap:10px;">
+            <button class="go-btn" style="flex:1; background:#333;" onclick="closeModals()">Cancel</button>
+            <button class="go-btn" style="flex:1;" onclick="saveEntry()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Context Menu -->
+<div id="actionMenu" class="modal-overlay">
+    <div class="modal-content" style="gap:10px;">
+        <h2 style="margin:0; font-size:1rem; text-align:center; color:var(--text-muted)">Shortcut Actions</h2>
+        <button class="action-btn" onclick="triggerEdit()">
+            <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            Edit Shortcut
+        </button>
+        <button class="action-btn delete-text" onclick="triggerDelete()">
+            <svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
+            Remove Shortcut
+        </button>
+        <button class="go-btn" style="margin-top:10px; background:#333;" onclick="closeModals()">Close</button>
+    </div>
+</div>
+
+<script>
+    let shortcuts = JSON.parse(localStorage.getItem('elite_shortcuts')) || [
+        { name: 'Smart IP Info', url: 'https://smartipinfo.vercel.app/', icon: 'https://smartipinfo.vercel.app/favicon.png' },
+        { name: 'Editor', url: 'https://html-max-editor.vercel.app', icon: 'https://html-max-editor.vercel.app/index.jpg' },
+        { name: 'Proxyium', url: 'https://proxyium.com', icon: 'https://www.google.com/s2/favicons?domain=proxyium.com&sz=128' }
+    ];
+
+    let dragItem = null;
+    let activeIndex = null;
+    let pressTimer;
+
+    // Helper: Generate Icon URL from Site URL
+    function getIconUrl(url) {
+        if(!url) return '';
+        const domain = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+        return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    }
+
+    // Auto-fetch icon while typing in modal
+    document.getElementById('nodeUrl').addEventListener('input', (e) => {
+        const url = e.target.value.trim();
+        if(url.length > 3) {
+            const icon = getIconUrl(url);
+            document.getElementById('nodeIcon').value = icon;
+            document.getElementById('iconPreview').src = icon;
+        }
+    });
+
+    document.getElementById('nodeIcon').addEventListener('input', (e) => {
+        document.getElementById('iconPreview').src = e.target.value;
+    });
+
+    function handleLaunch(direct) {
+        let input = direct || document.getElementById("mainInput").value.trim();
+        if (!input) return;
+
+        const bar = document.getElementById('progress-bar');
+        bar.style.width = '100%';
+
+        setTimeout(() => {
+            let targetUrl;
+            const isUrl = /^(https?:\/\/)?([\w\d-]+\.)+\w{2,}(\/.*)?$/i.test(input);
+            if (isUrl) {
+                targetUrl = input.startsWith('http') ? input : 'https://' + input;
+            } else {
+                targetUrl = `https://www.google.com/search?q=${encodeURIComponent(input)}`;
+            }
+            window.location.href = targetUrl;
+        }, 600);
+    }
+
+    function render() {
+        const grid = document.getElementById('shortcutGrid');
+        grid.querySelectorAll('.shortcut-link').forEach(n => n.remove());
+
+        shortcuts.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'shortcut-item shortcut-link';
+            div.dataset.index = index;
+            div.style.animationDelay = `${index * 0.08}s`;
+            
+            // Use stored icon, or generate if missing
+            const icon = item.icon || getIconUrl(item.url);
+
+            div.innerHTML = `
+                <img src="${icon}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1242/1242392.png'">
+                <span style="font-weight:600; text-overflow:ellipsis; overflow:hidden; width:100%; white-space:nowrap; text-align:center;">${item.name}</span>
+            `;
+
+            div.onpointerdown = (e) => startInteraction(e, index, div);
+            grid.insertBefore(div, document.getElementById('addBtn'));
+        });
+    }
+
+    function startInteraction(e, index, el) {
+        let isLongPress = false;
+        const startX = e.clientX;
+        const startY = e.clientY;
+
+        pressTimer = setTimeout(() => {
+            isLongPress = true;
+            showActionMenu(index);
+        }, 600);
+
+        el.onpointermove = (moveEv) => {
+            const dist = Math.hypot(moveEv.clientX - startX, moveEv.clientY - startY);
+            if (dist > 10) {
+                clearTimeout(pressTimer);
+                if (!isLongPress) initiateDrag(el, index);
+            }
+        };
+
+        el.onpointerup = () => {
+            clearTimeout(pressTimer);
+            if (!isLongPress && !dragItem) handleLaunch(shortcuts[index].url);
+            el.onpointermove = null;
+            el.onpointerup = null;
+        };
+    }
+
+    function initiateDrag(el, index) {
+        dragItem = el;
+        el.classList.add('dragging');
+        
+        document.onpointermove = (e) => {
+            const target = document.elementFromPoint(e.clientX, e.clientY);
+            const overItem = target?.closest('.shortcut-link');
+            
+            if (overItem && overItem !== dragItem) {
+                const newIdx = parseInt(overItem.dataset.index);
+                const oldIdx = parseInt(dragItem.dataset.index);
+                [shortcuts[oldIdx], shortcuts[newIdx]] = [shortcuts[newIdx], shortcuts[oldIdx]];
+                localStorage.setItem('elite_shortcuts', JSON.stringify(shortcuts));
+                render(); 
+                dragItem = document.querySelector(`[data-index="${newIdx}"]`);
+                dragItem.classList.add('dragging');
+                dragItem.style.animation = 'none';
+            }
+        };
+
+        document.onpointerup = () => {
+            if(dragItem) dragItem.classList.remove('dragging');
+            dragItem = null;
+            document.onpointermove = null;
+        };
+    }
+
+    function openAddModal() {
+        activeIndex = null;
+        document.getElementById('modalTitle').innerText = "Add Shortcut";
+        document.getElementById('nodeName').value = '';
+        document.getElementById('nodeUrl').value = '';
+        document.getElementById('nodeIcon').value = '';
+        document.getElementById('iconPreview').src = '';
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function showActionMenu(index) {
+        activeIndex = index;
+        document.getElementById('actionMenu').style.display = 'flex';
+    }
+
+    function triggerEdit() {
+        const item = shortcuts[activeIndex];
+        document.getElementById('modalTitle').innerText = "Edit Shortcut";
+        document.getElementById('nodeName').value = item.name;
+        document.getElementById('nodeUrl').value = item.url;
+        document.getElementById('nodeIcon').value = item.icon || getIconUrl(item.url);
+        document.getElementById('iconPreview').src = item.icon || getIconUrl(item.url);
+        document.getElementById('actionMenu').style.display = 'none';
+        document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function triggerDelete() {
+        if(confirm('Remove this shortcut?')) {
+            shortcuts.splice(activeIndex, 1);
+            saveAndRefresh();
+        }
+    }
+
+    function saveEntry() {
+        const name = document.getElementById('nodeName').value.trim();
+        let url = document.getElementById('nodeUrl').value.trim();
+        const icon = document.getElementById('nodeIcon').value.trim();
+        
+        if(!name || !url) return;
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+        const data = { name, url, icon };
+
+        if(activeIndex !== null) shortcuts[activeIndex] = data;
+        else shortcuts.push(data);
+        
+        saveAndRefresh();
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem('elite_shortcuts', JSON.stringify(shortcuts));
+        closeModals();
+        render();
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    }
+
+    window.onload = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('u')) handleLaunch(urlParams.get('u'));
+        render();
+    };
+
+    document.getElementById("mainInput").onkeydown = (e) => { if(e.key === "Enter") handleLaunch(); };
+</script>
+</body>
+</html>

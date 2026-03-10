@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Smart IP",
+    "url": "https://smartipinfo.vercel.app/",
+    "icon": "https://smartipinfo.vercel.app/favicon.png"
+  },
+  {
+    "name": "Editor",
+    "url": "https://html-max-editor.vercel.app",
+    "icon": "https://html-max-editor.vercel.app/index.jpg"
+  },
+  {
+    "name": "HaiMusic",
+    "url": "https://HAIMUSIC.free.nf",
+    "icon": "https://HAIMUSIC.free.nf/favicon.png"
+  },
+  {
+    "name": "AdSterra",
+    "url": "https://beta.publishers.adsterra.com/",
+    "icon": "https://www.google.com/s2/favicons?domain=adsterra.com&sz=128"
+  },
+  {
+    "name": "HaiFlix",
+    "url": "https://haiflix.vercel.app",
+    "icon": "https://haiflix.vercel.app/favicon.png"
+  },
+  {
+    "name": "Proxyium",
+    "url": "https://proxyium.com",
+    "icon": "https://www.google.com/s2/favicons?domain=proxyium.com&sz=128"
+  },
+  {
+    "name": "HaiWall",
+    "url": "https://HaiWall.vercel.app",
+    "icon": "https://HaiWall.vercel.app/icon.png"
+  },
+  {
+    "name": "HaiMail",
+    "url": "https://Haimailwb.vercel.app",
+    "icon": "https://Haimailwb.vercel.app/favicon.png"
+  },
+  {
+    "name": "MxPlayer",
+    "url": "https://MxPlayer.in",
+    "icon": "https://www.google.com/s2/favicons?domain=MxPlayer.in&sz=128"
+  },
+  {
+    "name": "Liteapks",
+    "url": "https://Liteapks.com",
+    "icon": "https://www.google.com/s2/favicons?domain=Liteapks.com&sz=128"
+  },
+  {
+    "name": "HaldarAi",
+    "url": "https://haldaraiindia.free.nf",
+    "icon": "https://haldaraiindia.free.nf/wp-content/uploads/2025/10/cropped-IMG_20251022_121807_221-150x150.jpg"
+  },
+  {
+    "name": "HoneyMaxAi",
+    "url": "https://dashboard.honeygain.com",
+    "icon": "https://www.google.com/s2/favicons?domain=dashboard.honeygain.com&sz=128"
+  },
+  {
+    "name": "YouTube",
+    "url": "https://youtube.com",
+    "icon": "https://www.google.com/s2/favicons?domain=YouTube.com&sz=128"
+  },
+  {
+    "name": "HaiEncrypt",
+    "url": "https://HaiEncript.vercel.app",
+    "icon": "https://HaiEncript.vercel.app/favicon.png"
+  },
+  {
+    "name": "Account",
+    "url": "https://accounts.google.com",
+    "icon": "https://www.google.com/s2/favicons?domain=accounts.google.com&sz=128"
+  },
+  {
+    "name": "Gmail",
+    "url": "https://Gmail.com",
+    "icon": "data:image/jpeg;base64,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"
+  },
+  {
+    "name": "Facebook",
+    "url": "https://Fb.com",
+    "icon": "https://www.google.com/s2/favicons?domain=fb.com&sz=128"
+  },
+  {
+    "name": "HaiMeet",
+    "url": "https://haimeet.vercel.app/",
+    "icon": "https://haimeet.vercel.app/favicon.png"
+  },
+  {
+    "name": "HaiHost",
+    "url": "https://HaiHost.free.nf",
+    "icon": "https://HaiHost.free.nf/favicon.png"
+  },
+  {
+    "name": "HaiFlash",
+    "url": "https://haiflash.free.nf",
+    "icon": "https://haiflash.free.nf/favicon.png"
+  },
+  {
+    "name": "Ai Studio",
+    "url": "https://aistudio.google.com",
+    "icon": "https://www.google.com/s2/favicons?domain=aistudio.google.com&sz=128"
+  },
+  {
+    "name": "Gemini",
+    "url": "https://Gemini.google.com",
+    "icon": "https://www.google.com/s2/favicons?domain=Gemini.google.com&sz=128"
+  },
+  {
+    "name": "ChatGPT",
+    "url": "https://ChatGPT.com",
+    "icon": "https://www.google.com/s2/favicons?domain=chatgpt.com&sz=128"
+  },
+  {
+    "name": "Arena",
+    "url": "https://arena.ai",
+    "icon": "https://www.google.com/s2/favicons?domain=arena.ai&sz=128"
+  }
+]
